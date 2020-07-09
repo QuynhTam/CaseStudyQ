@@ -1,9 +1,10 @@
 package customer;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.time.LocalDate;
 
-public class Customer {
+public class Customer implements Serializable {
     private String idCustomer;
     private String nameCustomer;
     private LocalDate birthday;

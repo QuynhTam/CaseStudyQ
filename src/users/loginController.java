@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -39,10 +40,10 @@ public class loginController implements Initializable {
         String login = txtUserName.getText();
         String pass = txtPassWord.getText();
         if (!login.equals("abc") || !pass.equals("abc")) {
-            checkPass.setText("Username or Password wrong ! Try again !");
-//        if (login.equals("") || pass.equals("")) {
-//            JOptionPane.showMessageDialog(null,"Username or Password Blank");
-//        }
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Infomation !!!");
+            alert.setContentText("User name or password wrong ! Please enter again !");
+            alert.show();
         } else {
             Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent root = FXMLLoader.load(getClass().getResource("../ManagerAplication/Manager.fxml"));
@@ -52,7 +53,6 @@ public class loginController implements Initializable {
             primaryStage.centerOnScreen();
         }
     }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 

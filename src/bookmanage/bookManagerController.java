@@ -1,7 +1,6 @@
 package bookmanage;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import filemanager.FileManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,19 +12,15 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-import java.awt.print.Book;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-
 public class bookManagerController implements Initializable {
     @FXML
     TableView<Books> tableView;
-    //    @FXML
-//    private ObservableList<Books> danhsach;
     @FXML
     TableColumn<Books, String> idColumn;
     @FXML
@@ -53,6 +48,7 @@ public class bookManagerController implements Initializable {
     TextField txtYear;
     @FXML
     TextField txtSearch;
+
     List<Books> listBooks = new ArrayList<>();
     @FXML
     Button btnSave;
@@ -60,14 +56,16 @@ public class bookManagerController implements Initializable {
     Button btnEdit;
     @FXML
     ComboBox<String> comboboxSearch;
-    List<String> categoryList = new ArrayList<>();
     String[] comboxList = {"Mã Sách", "Tên Sách", "Tác Giả", "Thể Loại", "Nhà Xuất Bản ", "Năm Xuất Bản"};
-    Search searchName = new Search();
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        listBooks = FXCollections.observableArrayList(new Books());
+        try {
+            readFile();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
         idColumn.setCellValueFactory(new PropertyValueFactory<Books, String>("codeBook"));
         bookNameColumn.setCellValueFactory(new PropertyValueFactory<Books, String>("nameBook"));
         authorColumn.setCellValueFactory(new PropertyValueFactory<Books, String>("author"));
@@ -76,11 +74,25 @@ public class bookManagerController implements Initializable {
         yearColumn.setCellValueFactory(new PropertyValueFactory<Books, Integer>("year"));
         btnEdit.setDisable(true);
         tableView.getItems().addAll(listBooks);
-//        categoryList.add("Tiểu thuyết");
-//        categoryList.add("Truyện tranh");
-
         comboboxSearch.getItems().addAll(comboxList);
-
+        txtSearch.textProperty().addListener((o, oldValue, newValue) -> {
+            searchCodeBook(txtSearch.getText());
+        });
+        txtSearch.textProperty().addListener((o, oldValue, newValue) -> {
+            searchNameBook(txtSearch.getText());
+        });
+//        txtSearch.textProperty().addListener((o, oldValue, newValue) -> {
+//            searchyear(Integer.parseInt(txtSearch.getText()));
+//        });
+//        txtSearch.textProperty().addListener((o, oldValue, newValue) -> {
+//            searchmanufac(txtSearch.getText());
+//        });
+//        txtSearch.textProperty().addListener((o, oldValue, newValue) -> {
+//            searchCategory(txtSearch.getText());
+//        });
+        txtSearch.textProperty().addListener((o, oldValue, newValue) -> {
+            searchAuthor(txtSearch.getText());
+        });
     }
 
     public void loadBooklist() {
@@ -91,7 +103,7 @@ public class bookManagerController implements Initializable {
     }
 
     //them
-    public void add(ActionEvent e) {
+    public void add(ActionEvent e) throws Exception {
         Books books = new Books();
         books.setNameBook(txtName.getText());
         books.setCodeBook(txtCodeBook.getText());
@@ -110,44 +122,14 @@ public class bookManagerController implements Initializable {
         }
         listBooks.add(books);
         loadBooklist();
+        writeFile();
     }
 
-
-//    public void Search(ActionEvent e) {
-//        String search = txtSearch.getText();
-//        int selectedIndex = comboboxSearch.getSelectionModel().getSelectedIndex();
-//        System.out.println(selectedIndex);
-//        if (search.equals("")) {
-//            loadBooklist();
-//        } else {
-//            tableView.getItems().clear();
-//            for (int i = 0; i < listBooks.size(); i++) {
-////            tableView.getItems().clear();
-//                if (Integer.parseInt(search) == (listBooks.get(i).getYear())) {
-////                    tableView.getItems().clear();
-//                    tableView.getItems().add(listBooks.get(i));
-//
-//                }
-//            }
-//        }
-//
-//
-//    }
 
     public void searchCodeBook(String codeBook) {
         tableView.getItems().clear();
         for (Books books : listBooks) {
-            if (codeBook.equals(books.getCodeBook())) {
-                tableView.getItems().add(books);
-            }
-        }
-    }
-
-    public void searchCdeBook(String nameBook) {
-        tableView.getItems().clear();
-        String input = nameBook.toLowerCase();
-        for (Books books : listBooks) {
-            if (books.getNameBook().toLowerCase().contains(input)) {
+            if (codeBook.toLowerCase().equals(books.getCodeBook().toLowerCase())) {
                 tableView.getItems().add(books);
             }
         }
@@ -156,7 +138,7 @@ public class bookManagerController implements Initializable {
     public void searchNameBook(String nameBook) {
         tableView.getItems().clear();
         for (Books books : listBooks) {
-            if (nameBook.equals(books.getNameBook())) {
+            if (books.getNameBook().toLowerCase().contains(nameBook.toLowerCase())) {
                 tableView.getItems().add(books);
             }
         }
@@ -165,7 +147,7 @@ public class bookManagerController implements Initializable {
     public void searchAuthor(String author) {
         tableView.getItems().clear();
         for (Books books : listBooks) {
-            if (author.equals(books.getAuthor())) {
+            if ((books.getAuthor().toLowerCase().contains(author.toLowerCase()))) {
                 tableView.getItems().add(books);
             }
         }
@@ -174,7 +156,7 @@ public class bookManagerController implements Initializable {
     public void searchCategory(String category) {
         tableView.getItems().clear();
         for (Books books : listBooks) {
-            if (category.equals(books.getCategory())) {
+            if ((books.getCategory().toLowerCase().contains(category.toLowerCase()))) {
                 tableView.getItems().add(books);
             }
         }
@@ -183,7 +165,7 @@ public class bookManagerController implements Initializable {
     public void searchmanufac(String manufac) {
         tableView.getItems().clear();
         for (Books books : listBooks) {
-            if (manufac.equals(books.getNameBook())) {
+            if ((books.getNameBook().toLowerCase().contains(manufac.toLowerCase()))) {
                 tableView.getItems().add(books);
             }
         }
@@ -198,6 +180,19 @@ public class bookManagerController implements Initializable {
         }
     }
 
+    //ghi file
+    public void writeFile() throws Exception {
+        FileManager<Books> fileManager = new FileManager<>();
+        fileManager.writeFile("src/bookmanage/books.txt", listBooks);
+    }
+
+    //đọc file
+    public void readFile() throws Exception {
+        FileManager<Books> fileManager = new FileManager<>();
+        listBooks.clear();
+        listBooks.addAll(fileManager.readFile("src/bookmanage/books.txt"));
+    }
+
     //lựa chọn chức năng tìm kiếm
     public void Search() {
         String search = txtSearch.getText();
@@ -210,7 +205,7 @@ public class bookManagerController implements Initializable {
                     searchCodeBook(txtSearch.getText());
                     break;
                 case 1:
-                    searchCdeBook(txtSearch.getText());
+                    searchNameBook(txtSearch.getText());
                     break;
                 case 2:
                     searchAuthor(txtSearch.getText());
@@ -250,6 +245,12 @@ public class bookManagerController implements Initializable {
             alert.setContentText("No book selected. Please try again.");
             alert.showAndWait();
         } else {
+            txtCodeBook.setText(book.getCodeBook());
+            txtName.setText(book.getNameBook());
+            txtAuthor.setText(book.getAuthor());
+            txtCategory.setText(book.getCategory());
+            txtManufac.setText(book.getPublisher());
+            txtYear.setText(String.valueOf(book.getYear()));
             txtCodeBook.setDisable(true);
             btnSave.setDisable(false);
             btnEdit.setDisable(true);
@@ -270,7 +271,6 @@ public class bookManagerController implements Initializable {
             book.setCategory(txtCategory.getText());
             book.setPublisher(txtManufac.getText());
             book.setYear(Integer.parseInt(txtYear.getText()));
-//            loadBooklist();
             btnSave.setDisable(true);
             txtCodeBook.setDisable(false);
             btnEdit.setDisable(false);

@@ -1,6 +1,8 @@
 package bookmanage;
 
-public class Books {
+import java.io.Serializable;
+
+public class Books implements Serializable {
     private String codeBook;
     private String nameBook;
     private String author;
