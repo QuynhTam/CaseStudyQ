@@ -78,10 +78,10 @@ public class QLMuonSach extends Books implements Initializable {
 
         tableViewBook.getItems().addAll(listBooks);
         tableViewInfo.getItems().addAll(muonSachList);
-//        dpkNgayMuon.setValue(LocalDate.now());
-//        dpkhantra.setValue(LocalDate.now().plusDays(15));
-//        dpkhantra.setDisable(true);
-//        dpkNgayMuon.setDisable(true);
+        dpkNgayMuon.setValue(LocalDate.now());
+        dpkhantra.setValue(LocalDate.now().plusDays(15));
+        dpkhantra.setDisable(true);
+        dpkNgayMuon.setDisable(true);
     }
 
     public void readFile() {

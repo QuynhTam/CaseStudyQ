@@ -81,7 +81,10 @@ public class QLTraSach implements Initializable {
     List<MuonSach> muonSachList = new ArrayList<>();
     List<ThanhToanTien> thanhToanTienList = new ArrayList<>();
     //
-
+    @FXML
+    RadioButton rd1;
+    @FXML
+    RadioButton rd;
 
     //
     public void back(ActionEvent event) throws IOException {
@@ -121,7 +124,6 @@ public class QLTraSach implements Initializable {
         txtSoLuong.setDisable(true);
         dpkNgayMuon.setDisable(true);
         dpkHanTra.setDisable(true);
-
     }
 
     public void search(String mkh) {
@@ -154,6 +156,7 @@ public class QLTraSach implements Initializable {
         int totalMoney = 0;
         int downPayment = 0;
         int moneyOutOfDates = 0;
+        int moneyPay = 0;
         int moneyToPay;
         int unitPrice = 2000;
         LocalDate rentalDate = dpkNgayMuon.getValue().minusDays(1);
@@ -181,9 +184,10 @@ public class QLTraSach implements Initializable {
             downPayment = downPayment + payMoney.getMoneyCoc();
             moneyOutOfDates = moneyOutOfDates + payMoney.getTienPhat();
         }
+        moneyPay = totalMoney + moneyOutOfDates;
         moneyToPay = totalMoney - downPayment + moneyOutOfDates;
         SumMoney2.setText(String.valueOf(downPayment));
-        SumMoney.setText(String.valueOf(totalMoney));
+        SumMoney.setText(String.valueOf(moneyPay));
         if (moneyToPay < 0) {
             SumMoney3.setText(String.valueOf(Math.abs(moneyToPay)));
             status.setText("Còn thừa :");
@@ -197,10 +201,10 @@ public class QLTraSach implements Initializable {
         txtMaKH.setText("");
         txtTienCoc.setText("");
         txtSoLuong.setText("");
-//        MuonSach muonSach = tableViewQLTS.getSelectionModel().getSelectedItem();
-//        muonSachList.remove(muonSach);
+        MuonSach muonSach = tableViewQLTS.getSelectionModel().getSelectedItem();
+        muonSachList.remove(muonSach);
         writeTraSach();
-        load();
+//        load();
     }
 
     public void readFileTraSach() {

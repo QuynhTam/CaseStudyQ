@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="CaseQuynh:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/CaseQuynh_jar</output-path>
+    <root id="archive" name="CaseQuynh.jar">
+      <element id="module-output" name="CaseQuynh" />
+    </root>
+  </artifact>
+</component>
